@@ -3,7 +3,12 @@ from tkinter.font import Font
 from datetime import datetime
 from screeninfo import get_monitors
 
-time_format = '%H:%M:%S'
+time_format = '%H:%M'
+font_family = 'JetBrains Mono'
+font_size = 200
+foreground_color = 'white'
+background_color = 'black'
+
 
 class Save_O_Clock:
     def __init__(self):
@@ -26,7 +31,7 @@ class Create_Window:
     def __init__(self, root, monitor):
         self.monitor = monitor
         self.root = Toplevel(root)
-        self.root.configure(background='black')
+        self.root.configure(background=background_color)
         self.root.geometry(f'{self.monitor.width}x{self.monitor.height}+{self.monitor.x}+{self.monitor.y}')
         self.root.update_idletasks()
         self.root.attributes('-topmost', True)
@@ -50,12 +55,12 @@ class Create_Window:
             self.frame,
             cursor='none',
             text='',
-            fg='white',
-            bg='black',
+            fg=foreground_color,
+            bg=background_color,
             width=self.monitor.width,
             height=self.monitor.height
         )
-        self.label.configure(font=Font(family='JetBrains Mono', size=200))
+        self.label.configure(font=Font(family=font_family, size=font_size))
         self.label.pack()
 
         self.updateLabel(self)
