@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.font import Font
 from datetime import datetime
+from sys import platform
 from screeninfo import get_monitors
 
 time_format = '%H:%M'
@@ -8,14 +9,14 @@ font_family = 'JetBrains Mono'
 font_size = 200
 foreground_color = 'white'
 background_color = 'black'
-
+operating_system = 'windows'
 
 class Save_O_Clock:
     def __init__(self):
         self.root = Tk()
         self.root.title('Save-O-Clock')
         self.root.configure(background='black', cursor='none')
-        self.root.geometry('0x0')
+        self.root.geometry('0x0+-100+-100') # Make sure the initial window doesn't show
         self.root.bind_all('<Key>', self.close)
         self.root.bind_all('<Motion>', self.close)
         self.root.update_idletasks()
@@ -35,7 +36,14 @@ class Create_Window:
         self.root.geometry(f'{self.monitor.width}x{self.monitor.height}+{self.monitor.x}+{self.monitor.y}')
         self.root.update_idletasks()
         self.root.attributes('-topmost', True)
-        self.root.attributes('-fullscreen', True)
+
+        if operating_system == 'windows':
+            self.root.overrideredirect(1)
+        elif operating_system == 'linux':
+            self.root.attributes('-zoomed', True)
+        elif operating_system == 'macos':
+            self.root.attributes('-fullscreen', True)
+        
 
         self.createFrame(self)
 
@@ -71,5 +79,12 @@ class Create_Window:
 
 
 if __name__ == '__main__':
+    if platform == 'linux' or platform == 'linux2':
+        operating_system = 'linux'
+    elif platform == 'darwin':
+        operating_system = 'osx'
+    elif platform == 'win32' or platform == 'cygwin':
+        operating_system = 'windows'
+        
     w = Save_O_Clock()
     w.root.mainloop()
