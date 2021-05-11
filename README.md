@@ -22,8 +22,25 @@ $ pipenv run python save-o-clock.py
 
 ## Standalone application
 
-To build a standalone executable with [PyInstaller](https://www.pyinstaller.org/) use the following command:
+To build a standalone executable (rename `.exe` to `.scr`) with [PyInstaller](https://www.pyinstaller.org/) use the following command:
 
 ```bash
-$ pipenv run pyinstaller save-o-clock.py --nowindowed --noconsole --icon NONE --noconfirm
+$ pipenv run pyinstaller save-o-clock.py --nowindowed --noconsole --icon NONE --noconfirm; mv .\dist\save-o-clock\save-o-clock.exe .\dist\save-o-clock\save-o-clock.scr
+```
+
+## Settings
+
+When a `settings.json` file exists in the same directory as the `.scr` file it will try to take the settings from that file.
+If it doesn't exist it will try fall back to it's defaults.
+
+An example of a `settings.json` file:
+```json
+{
+    "time_format": "%H:%M:%S",
+    "font_family": "JetBrains Mono",
+    "font_size": 200,
+    "foreground_color": "white",
+    "background_color": "black",
+    "log_file": "log.txt"
+}
 ```
