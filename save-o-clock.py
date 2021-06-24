@@ -100,19 +100,6 @@ class Create_Screen:
 
         self.createFrame(self)
 
-    def getChildWindow(self, preview_handle):
-        child_handles = []
-
-        def _windowEnumerationHandler(hwnd, param=None):
-            child_handles.append(hwnd)
-            return True
-
-        try:
-            win32gui.EnumChildWindows(preview_handle, _windowEnumerationHandler, None)
-            return child_handles[0]
-        except:
-            return 0
-
     def createFrame(self, event=None):
         self.frame = Frame(
             self.root,
