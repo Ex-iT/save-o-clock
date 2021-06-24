@@ -28,12 +28,13 @@ class Save_O_Clock:
     def __init__(self, config = False, preview = False, config_handle = 0, preview_handle = 0):
         self.root = Tk()
         self.root.title(app_name)
+        self.root.iconbitmap('./save-o-clock.ico')
         self.root.geometry('0x0+-100+-100') # Make sure the initial window doesn't show
         self.root.overrideredirect(True) # No window chrome and hide from task bar
         self.root.update_idletasks()
 
         if config:
-            Config_Dialog(self.root, self.close, config_handle)
+            Config_Dialog(self.root, self.close)
         elif preview:
             self.handlePreview(preview_handle)
         else:
@@ -41,16 +42,9 @@ class Save_O_Clock:
 
     def handlePreview(self, preview_handle):
         hwnd = self.root.winfo_id()
-
-        # left, top, right, bottom = win32gui.GetWindowRect(preview_handle)
-        # logger(f'{left}, {top}, {right}, {bottom}')
-
-        win32gui.SetParent(hwnd, preview_handle)
-        style = win32gui.GetWindowLong(int(hwnd), win32con.GWL_STYLE)
-        win32gui.SetWindowLong(hwnd, win32con.GWL_STYLE, style | win32con.WS_CHILD);
-
+        left, top, right, bottom = win32gui.GetWindowRect(preview_handle)
         Monitor = namedtuple('Monitor', ['width', 'height', 'x', 'y'])
-        Create_Screen(self.root, Monitor(152, 112, 0, 0), preview_handle)
+        Create_Screen(self.root, Monitor((right-left), (bottom-top), left, top), hwnd, preview_handle)
 
     def handleScreenSaver(self):
         self.root.configure(background='black', cursor='none')
@@ -65,45 +59,29 @@ class Save_O_Clock:
 
 
 class Config_Dialog:
-    def __init__(self, root, close, config_handle):
+    def __init__(self, root, close):
         width = 300
         height = 100
         self.root = Toplevel(root)
         self.root.title(f'{app_name} - Settings')
+        self.root.iconbitmap('./save-o-clock.ico')
         self.root.geometry(f'{width}x{height}')
         self.root.resizable(False, False)
+        self.root.update_idletasks()
         self.root.protocol('WM_DELETE_WINDOW', lambda: close())
 
-        if config_handle > 0:
-            hwnd = self.root.winfo_id()
-            win32gui.SetParent(hwnd, config_handle)
-
-        self.label = Label(
-            self.root,
-            text = f'{app_name} - v{app_version}',
-        )
+        self.label = Label(self.root, text = f'{app_name} - v{app_version}')
         self.label.pack()
-        self.label.place(
-            y = 20,
-            width = width
-        )
+        self.label.place(y = 20, width = width)
 
-        self.link = Label(
-            self.root,
-            text = app_url,
-            fg = 'blue',
-            cursor = 'hand2'
-        )
+        self.link = Label(self.root, text = app_url, fg = 'blue', cursor = 'hand2')
         self.link.bind('<Button-1>', lambda e: webbrowser.open_new(app_url))
         self.link.pack()
-        self.link.place(
-            y = 40,
-            width = width
-        )
+        self.link.place(y = 40, width = width)
 
 
 class Create_Screen:
-    def __init__(self, root, monitor, preview_handle = 0):
+    def __init__(self, root, monitor, root_handle = 0, preview_handle = 0):
         self.monitor = monitor
         self.font_size = font_size
         self.root = Toplevel(root)
@@ -116,14 +94,24 @@ class Create_Screen:
 
         if preview_handle > 0:
             self.font_size = 12
-            left, top, right, bottom = win32gui.GetWindowRect(preview_handle)
-            pos = f'{right-left}x{bottom-top}+{left}+{right}'
-            logger(pos)
+            win32gui.SetParent(root_handle, preview_handle)
 
         self.root.geometry(pos)
 
-
         self.createFrame(self)
+
+    def getChildWindow(self, preview_handle):
+        child_handles = []
+
+        def _windowEnumerationHandler(hwnd, param=None):
+            child_handles.append(hwnd)
+            return True
+
+        try:
+            win32gui.EnumChildWindows(preview_handle, _windowEnumerationHandler, None)
+            return child_handles[0]
+        except:
+            return 0
 
     def createFrame(self, event=None):
         self.frame = Frame(
@@ -178,21 +166,15 @@ def getArgs():
     # https://docs.microsoft.com/en-us/troubleshoot/windows/win32/screen-saver-command-line
     parser = argparse.ArgumentParser(description='Running the application with no arguments shows the Settings dialog.', prefix_chars='/')
     g = parser.add_mutually_exclusive_group()
-    g.add_argument('/c', help='Show the Settings dialog box, modal to the foreground window.', nargs='*')
-    g.add_argument('/p', help='Preview Screen Saver as child of window <HWND>.', metavar='<HWND>', nargs=1, type=int)
-    g.add_argument('/s', help='Run the Screen Saver.', action='store_true')
+    g.add_argument('/c', '/C', help='Show the Settings dialog box, modal to the foreground window.', nargs='*')
+    g.add_argument('/p', '/P', help='Preview Screen Saver as child of window <HWND>.', metavar='<HWND>', nargs=1, type=int)
+    g.add_argument('/s', '/S', help='Run the Screen Saver.', action='store_true')
 
     logger(str(sys.argv))
 
     return parser.parse_args()
 
 def main():
-    # hwnd = win32gui.FindWindow(None, app_name)
-    # if hwnd:
-    #     win32gui.ShowWindow(hwnd, 5)
-    #     win32gui.SetForegroundWindow(hwnd)
-    #     sys.exit(0)
-
     setJsonSettings('settings.json')
     args = getArgs()
 
