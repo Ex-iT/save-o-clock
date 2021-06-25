@@ -37,7 +37,7 @@ class Save_O_Clock:
         self.root.update_idletasks()
 
         if config:
-            Config_Dialog(self.root, self.close)
+            Config_Dialog(self.root, self.close, config_handle)
         elif preview:
             self.handlePreview(preview_handle)
         else:
