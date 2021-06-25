@@ -1,10 +1,9 @@
 import sys
+import pathlib
 import argparse
 import json
 import webbrowser
 import win32gui
-import win32con
-from time import sleep
 from os import path
 from collections import namedtuple
 from tkinter import *
@@ -18,17 +17,21 @@ font_family = 'JetBrains Mono'
 font_size = 200
 foreground_color = 'white'
 background_color = 'black'
-log_file = 'log.txt'
 
 app_name = 'Save-O-Clock'
 app_version = '0.0.1'
 app_url = 'https://github.com/Ex-iT/save-o-clock'
 
+# Only use this logging while debugging.
+# Writing a file will make the screensaver crash (preview still works).
+logging_enabled = False
+log_file = 'log.txt'
+
 class Save_O_Clock:
     def __init__(self, config = False, preview = False, config_handle = 0, preview_handle = 0):
         self.root = Tk()
         self.root.title(app_name)
-        self.root.iconbitmap('./save-o-clock.ico')
+        self.root.iconbitmap(path.join(cwd, 'save-o-clock.ico'))
         self.root.geometry('0x0+-100+-100') # Make sure the initial window doesn't show
         self.root.overrideredirect(True) # No window chrome and hide from task bar
         self.root.update_idletasks()
@@ -59,12 +62,12 @@ class Save_O_Clock:
 
 
 class Config_Dialog:
-    def __init__(self, root, close):
+    def __init__(self, root, close, config_handle):
         width = 300
         height = 100
         self.root = Toplevel(root)
         self.root.title(f'{app_name} - Settings')
-        self.root.iconbitmap('./save-o-clock.ico')
+        self.root.iconbitmap(path.join(cwd, 'save-o-clock.ico'))
         self.root.geometry(f'{width}x{height}')
         self.root.resizable(False, False)
         self.root.update_idletasks()
@@ -132,21 +135,25 @@ class Create_Screen:
 
 
 def logger(message):
-    log = open(log_file, 'a+')
-    time_stamp = datetime.now().strftime('%D %H:%M:%S')
-    log.write(f'{time_stamp} :: {message}\n')
-    log.close()
+    if (logging_enabled):
+        log = open(log_file, 'a+')
+        time_stamp = datetime.now().strftime('%D %H:%M:%S')
+        log.write(f'{time_stamp} :: {message}\n')
+        log.close()
 
 def setJsonSettings(settings_file):
     if path.isfile(settings_file):
-        with open(settings_file) as json_settings:
-            settings = json.load(json_settings)
-            if 'time_format' in settings: global time_format; time_format = settings['time_format']
-            if 'font_family' in settings: global font_family; font_family = settings['font_family']
-            if 'font_size' in settings: global font_size; font_size = settings['font_size']
-            if 'foreground_color' in settings: global foreground_color; foreground_color = settings['foreground_color']
-            if 'background_color' in settings: global background_color; background_color = settings['background_color']
-            if 'log_file' in settings: global log_file; log_file = settings['log_file']
+        logger('Settings file found')
+        try:
+            with open(settings_file) as json_settings:
+                settings = json.load(json_settings)
+                if 'time_format' in settings: global time_format; time_format = settings['time_format']
+                if 'font_family' in settings: global font_family; font_family = settings['font_family']
+                if 'font_size' in settings: global font_size; font_size = settings['font_size']
+                if 'foreground_color' in settings: global foreground_color; foreground_color = settings['foreground_color']
+                if 'background_color' in settings: global background_color; background_color = settings['background_color']
+        except:
+            logger('Failed reading settings file')
 
 def getArgs():
     # Screen Saver command-line arguments.
@@ -162,7 +169,7 @@ def getArgs():
     return parser.parse_args()
 
 def main():
-    setJsonSettings('settings.json')
+    setJsonSettings(path.join(cwd, 'settings.json'))
     args = getArgs()
 
     if args.c or (not args.c and not args.p and not args.s):
@@ -182,4 +189,5 @@ def main():
 
 
 if __name__ == '__main__':
+    cwd = pathlib.Path(__file__).parent.resolve()
     main()

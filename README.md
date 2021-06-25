@@ -31,6 +31,8 @@ pipenv run pyinstaller save-o-clock.py `
     --icon "save-o-clock.ico" `
     --add-binary "save-o-clock.ico;." `
     --noupx `
+    --onedir `
+    --clean `
     --noconfirm; `
     mv .\dist\save-o-clock\save-o-clock.exe .\dist\save-o-clock\save-o-clock.scr
 ```
@@ -43,12 +45,11 @@ If it doesn't exist it will try fall back to it's defaults.
 An example of a `settings.json` file (default settings):
 ```json
 {
-    "time_format": "%H:%M:%S",
+    "time_format": "%H:%M",
     "font_family": "JetBrains Mono",
     "font_size": 200,
     "foreground_color": "white",
-    "background_color": "black",
-    "log_file": "log.txt"
+    "background_color": "black"
 }
 ```
 
