@@ -1,58 +1,50 @@
-# Save-O-Clock
+# Save-o-Clock
 
-A simple Windows Screen Saver (Win32 Screen Saver v4.0+) Python (v3.9) with the [pywin32](https://pypi.org/project/pywin32/) and [TKinter](https://wiki.python.org/moin/TkInter) packages, supports multiple monitors.
-Displays a 24-hour clock (using [JetBrains Mono](https://www.jetbrains.com/lp/mono/) font) in the center of the screen.
-Closes on mouse movement or any keyboard input.
+**Save-o-Clock** is a modern, multi-monitor Windows screensaver that renders custom HTML content on each screen individually. It uses the Chromium-based **WebView2** engine for high-performance, modern web standards support.
 
-## Development
+![Save-o-Clock Preview](src/soc.html)
 
-First install all dependencies of this project using [pipenv](https://pypi.org/project/pipenv/) with the following command:
+## 🌟 Features
 
-```bash
-$ pipenv install --dev
-```
+- **Multi-Monitor Support**: Automatically detects all connected monitors and renders the screensaver on each one.
+- **WPF Configuration**: A premium Windows 11-style settings interface with Mica effects.
+- **Chromium Rendering**: Powered by WebView2 (Edge engine) for modern HTML/CSS/JS support.
+- **High Performance**: Optimized for modern hardware with minimal footprint.
+- **C# 12**: Built using the latest .NET technologies.
 
-This will automatically create a virtual environment to work in.
+## 🚀 Getting Started
 
-To start the application run:
+### Prerequisites
 
-```bash
-$ pipenv run python save-o-clock.py
-```
+- **Windows 10 or 11**.
+- **.NET 8 SDK** (to build) or **.NET 8 Desktop Runtime** (to run).
+- **WebView2 Runtime** (included with Windows 10/11).
 
-## Standalone application
+### How to Build
 
-To build a standalone executable (rename `.exe` to `.scr`) with [PyInstaller](https://www.pyinstaller.org/) use the following command (or run `build.bat`):
+1. Install the [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+2. Clone or download this repository.
+3. Run `build.bat`.
+4. This will generate `Save-O-Clock.scr` in the project root.
 
-```powershell
-pipenv run pyinstaller save-o-clock.py `
-    --nowindowed `
-    --noconsole `
-    --icon "save-o-clock.ico" `
-    --add-binary "save-o-clock.ico;." `
-    --noupx `
-    --onedir `
-    --clean `
-    --noconfirm; `
-    mv .\dist\save-o-clock\save-o-clock.exe .\dist\save-o-clock\save-o-clock.scr
-```
+### Installation
 
-## Settings
+1. Right-click the generated `Save-O-Clock.scr` file.
+2. Select **Install** to set it as your active screensaver.
+3. Alternatively, copy `Save-O-Clock.scr` to `C:\Windows\System32` to make it available in the Windows Screen Saver Settings dropdown.
 
-When a `settings.json` file exists in the same directory as the `.scr` file it will try to take the settings from that file.
-If it doesn't exist it will try fall back to it's defaults.
+## ⚙️ Configuration
 
-An example of a `settings.json` file (default settings):
-```json
-{
-    "time_format": "%H:%M",
-    "font_family": "JetBrains Mono",
-    "font_size": 200,
-    "foreground_color": "white",
-    "background_color": "black"
-}
-```
+1. Open the Windows **Screen Saver Settings**.
+2. Select **Save-O-Clock** from the list.
+3. Click **Settings...** to open the configuration window.
+4. Browse and select the HTML file you wish to display.
+5. Click **Save** to apply the changes.
 
-## Attribution
+## 🛠️ Project Structure
 
-Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+- `Save-O-Clock.csproj`: Modern SDK project file.
+- `src/Screensaver.cs`: Core logic for multi-monitor rendering and WebView2 hosting.
+- `src/ConfigWindow.xaml`: WPF-based Windows 11 style settings UI.
+- `src/soc.html`: A default sample HTML clock.
+- `build.bat`: Build automation script using `dotnet publish`.

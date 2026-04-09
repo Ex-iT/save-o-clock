@@ -1,4 +1,20 @@
-build/
-dist/
-*.spec
-log.*
+# .NET Build Folders
+bin/
+obj/
+publish/
+
+# IDE Specific
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build Artifacts
+Save-O-Clock.scr
+Save-O-Clock.exe
+*.pdb
+
+# WebView2 artifacts
+EBWebView/

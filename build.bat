@@ -1,14 +1,18 @@
 @echo off
-pipenv run pyinstaller save-o-clock.py ^
-    --nowindowed ^
-    --noconsole ^
-    --icon "save-o-clock.ico" ^
-    --add-binary "save-o-clock.ico;." ^
-    --add-binary "settings.json;." ^
-    --noupx ^
-    --onedir ^
-    --clean ^
-    --noconfirm
+set PROJECT_NAME=Save-O-Clock
+set OUTPUT_NAME=Save-O-Clock.scr
 
-ren ".\dist\save-o-clock\save-o-clock.exe" "save-o-clock.scr"
-ren ".\dist\save-o-clock\save-o-clock.exe.manifest" "save-o-clock.scr.manifest"
+echo Building %PROJECT_NAME% (.NET 8)...
+
+dotnet publish -c Release -r win-x64 --no-self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish
+
+if %ERRORLEVEL% equ 0 (
+    echo.
+    echo Success: Build complete.
+    copy /Y ".\publish\%PROJECT_NAME%.exe" ".\%OUTPUT_NAME%"
+    echo Copied binary to %OUTPUT_NAME%
+) else (
+    echo.
+    echo Error: Build failed. Check if .NET 8 SDK is installed.
+)
+pause

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save-O-Clock</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        html,
+        body {
+            font-family: 'JetBrains Mono', 'Roboto', monospace;
+            font-size: 16px;
+            line-height: 1.5;
+            background-color: black;
+            color: white;
+            -webkit-font-smoothing: antialiased
+        }
+
+        main {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center
+        }
+
+        time {
+            font-size: 10vw
+        }
+
+        .sr-only {
+            position: absolute;
+            left: -10000px;
+            top: auto;
+            width: 1px;
+            height: 1px;
+            overflow: hidden
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1 class="sr-only">Save-O-Clock</h1>
+        <p><span class="sr-only">The current time is:</span> <time id="time" datetime=""></time></p>
+    </main>
+    <script type="text/javascript">
+        const fps = 5;
+        const interval = Math.floor(1000 / fps);
+        const startTime = performance.now();
+        let previousTime = startTime;
+        let currentTime = 0;
+        let deltaTime = 0;
+
+        function updateTime() {
+            const date = new Date();
+            const time = date.toLocaleString(undefined, { hour: '2-digit', minute: '2-digit' });
+            const timeElement = document.getElementById('time');
+
+            timeElement.setAttribute('datetime', time);
+            timeElement.innerText = time;
+        }
+
+        function animationLoop(timestamp) {
+            currentTime = timestamp;
+            deltaTime = currentTime - previousTime;
+
+            if (deltaTime > interval) {
+                previousTime = currentTime - (deltaTime % interval);
+                updateTime();
+            }
+
+            requestAnimationFrame(animationLoop);
+        }
+
+        requestAnimationFrame(animationLoop);</script>
+</body>
+
+</html>
