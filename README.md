@@ -2,7 +2,7 @@
 
 **Save-o-Clock** is a modern, multi-monitor Windows screensaver that renders custom HTML content on each screen individually. It uses the Chromium-based **WebView2** engine for high-performance, modern web standards support.
 
-![Save-o-Clock Preview](src/soc.html)
+![Save-o-Clock Preview](https://soc.ex-it.nl/)
 
 ## 🌟 Features
 
