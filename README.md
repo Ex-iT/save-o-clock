@@ -17,12 +17,12 @@
 ### Prerequisites
 
 - **Windows 10 or 11**.
-- **.NET 8 SDK** (to build) or **.NET 8 Desktop Runtime** (to run).
+- **.NET 10 SDK** (to build) or **.NET 10 Desktop Runtime** (to run).
 - **WebView2 Runtime** (included with Windows 10/11).
 
 ### How to Build
 
-1. Install the [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0).
+1. Install the [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/10.0).
 2. Clone or download this repository.
 3. Run `build.bat`.
 4. This will generate `Save-O-Clock.scr` in the project root.
@@ -46,5 +46,6 @@
 - `Save-O-Clock.csproj`: Modern SDK project file.
 - `src/Screensaver.cs`: Core logic for multi-monitor rendering and WebView2 hosting.
 - `src/ConfigWindow.xaml`: WPF-based Windows 11 style settings UI.
+- `src/ConfigWindow.xaml.cs`: Code behind for the configuration window.
 - `src/soc.html`: A default sample HTML clock.
 - `build.bat`: Build automation script using `dotnet publish`.

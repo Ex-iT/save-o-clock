@@ -2,7 +2,7 @@
 set PROJECT_NAME=Save-O-Clock
 set OUTPUT_NAME=Save-O-Clock.scr
 
-echo Building %PROJECT_NAME% (.NET 8)...
+echo Building %PROJECT_NAME% (.NET 10)...
 
 dotnet publish -c Release -r win-x64 --no-self-contained -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./publish
 
@@ -13,6 +13,6 @@ if %ERRORLEVEL% equ 0 (
     echo Copied binary to %OUTPUT_NAME%
 ) else (
     echo.
-    echo Error: Build failed. Check if .NET 8 SDK is installed.
+    echo Error: Build failed. Check if .NET 10 SDK is installed.
 )
 pause
