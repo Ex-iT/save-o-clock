@@ -1,5 +1,7 @@
 # Save-O-Clock
 
+[![Build and Release](https://github.com/Ex-iT/save-o-clock/actions/workflows/release.yml/badge.svg)](https://github.com/Ex-iT/save-o-clock/actions/workflows/release.yml)
+
 **Save-O-Clock** is a multi-monitor Windows screensaver that renders custom HTML content on each screen individually. It uses the Chromium-based **WebView2** engine for high-performance, modern web standards support.
 
 [Save-O-Clock Preview](https://soc.ex-it.nl/)
